@@ -17,5 +17,6 @@ routes.get('/house', houseController.index);
 
 routes.get('/house/:id', houseController.show);
 
+routes.post('/house', houseController.create);
 
 export default routes;
