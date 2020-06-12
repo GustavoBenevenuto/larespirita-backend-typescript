@@ -31,7 +31,7 @@ class HouseController {
         const id_house = await trx('house').insert(houseData, 'id');
 
         
-
+        // Sereliazação
         const house_activity = activities.map((item : House_Activity) => {
             return {
                 weekday: item.weekday,
