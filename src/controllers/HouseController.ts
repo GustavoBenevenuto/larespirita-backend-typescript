@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import knex from '../database/connections';
 
+interface House_Activity{
+    id_activity : number,
+    weekday: string
+    hours: string
+}
 
 class HouseController {
 
@@ -25,12 +30,24 @@ class HouseController {
         
         const id_house = await trx('house').insert(houseData, 'id');
 
-        console.log(id_house);
+        
+
+        const house_activity = activities.map((item : House_Activity) => {
+            return {
+                weekday: item.weekday,
+                hours: item.hours,
+                id_house: id_house[0],
+                id_activity: item.id_activity
+            }
+        });
+
+        console.log(house_activity);
+
+        await trx('house_activity').insert(house_activity);
 
         await trx.commit();
 
-        
-        return res.json(req.body);
+        return res.json({menssage : "success"});
     }
 
     async index(req: Request, res: Response) { // Será oq irá aparecer no mapa
@@ -41,10 +58,11 @@ class HouseController {
             .where('uf', String(uf))
             .distinct()
             .select('house.*');
+
         return res.json(houses);
     }
 
-    async show(req: Request, res: Response) {
+    async show(req: Request, res: Response) { // Será oq vai aparecer nos detalhes
         const id = req.params.id;
         const house = await knex('house').where('id', id).select('*').first();
 
