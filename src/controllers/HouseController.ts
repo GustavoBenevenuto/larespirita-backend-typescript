@@ -67,9 +67,13 @@ class HouseController {
         const house = await knex('house').where('id', id).select('*').first();
 
         const activity = await knex('activity')
-            .join('house_activity', 'id_house', '=', 'id_activity')
+            .join('house_activity', 'activity.id', '=', 'house_activity.id_activity')
             .where('house_activity.id_house', id)
-            .select('activity.name');
+            .select(
+                'activity.name',
+                'house_activity.weekday',
+                'house_activity.hours'
+            );
 
         return res.json({ house, activity });
     }
